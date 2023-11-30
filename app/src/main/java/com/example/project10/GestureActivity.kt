@@ -81,6 +81,12 @@ enum class GestureType
 
 fun GestureTypeToString(gestureType: GestureType) : String
 {
+    /**
+     * Depending on the type of swipe indicated by the user we will display the following recorded
+     * gestures which utilizes a switch case format
+     * @params gestureType: type of gesture
+     * @returns a string
+     */
     return when (gestureType)
     {
         GestureType.SWIPE_UP -> {
