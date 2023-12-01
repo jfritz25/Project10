@@ -13,30 +13,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresPermission
-import androidx.compose.animation.Animatable
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.calculateTargetValue
-import androidx.compose.animation.rememberSplineBasedDecay
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.draggable
-import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Arrangement.Absolute.Center
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -50,24 +33,17 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.findNavController
 import com.example.project10.ui.theme.Project10Theme
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
@@ -76,17 +52,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.util.Locale
-import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.ExperimentalComposeApi
-import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.lerp
-import androidx.compose.ui.unit.Dp
-import kotlinx.coroutines.coroutineScope
 
 
 /**
@@ -106,25 +71,24 @@ class MainActivity : ComponentActivity() {
         val locationPermissionRequest = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) { permissions ->
-            when {
-                permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
-                    Log.d("Permissions","")
-                    setContent {
-                        Project10Theme {
+            if (permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false)) {
+                Log.d("Permissions","")
+                setContent {
+                    Project10Theme {
 
-                            // A surface container using the 'background' color from the theme
-                            Surface(
-                                modifier = Modifier.fillMaxSize(),
-                                color = MaterialTheme.colorScheme.background
-                            ) {
-                                begin_app()
-                            }
+                        // A surface container using the 'background' color from the theme
+                        Surface(
+                            modifier = Modifier.fillMaxSize(),
+                            color = MaterialTheme.colorScheme.background
+                        ) {
+                            start()
                         }
                     }
-                } else -> {
+                }
+            } else {
                 Log.d("No Permissions", "")
             }
-            }
+
         }
 
         locationPermissionRequest.launch(arrayOf(
@@ -139,8 +103,8 @@ class MainActivity : ComponentActivity() {
         val geoCoder = Geocoder(context, Locale.getDefault())
         val address = geoCoder.getFromLocation(lat,long,1)
 
-        state = address?.get(0)?.adminArea
-        city = address?.get(0)?.locality
+        state = address?.get(0)!!.adminArea
+        city = address[0]!!.locality
         return "City: $city\nState: $state"
     }
 
@@ -152,7 +116,7 @@ class MainActivity : ComponentActivity() {
 
     // gets lat long
     @Composable
-    private fun getCoords(): String {
+    private fun latlong(): String {
         val scope = rememberCoroutineScope()
         val context = LocalContext.current
         val locationClient = remember {
@@ -167,11 +131,11 @@ class MainActivity : ComponentActivity() {
                 priority,
                 CancellationTokenSource().token,
             ).await()
-            // if there is a result, use fetchedLocation and assign locationInfo
-            result?.let { fetchedLocation ->
+            // if there is a result, use found and assign locationInfo
+            result?.let { found ->
                 locationInfo =
                     getLocation(context,
-                        fetchedLocation.latitude, fetchedLocation.longitude)
+                        found.latitude, found.longitude)
             }
         }
 
@@ -180,19 +144,15 @@ class MainActivity : ComponentActivity() {
 
 
 
-    @OptIn(ExperimentalFoundationApi::class)
     @RequiresPermission(
         anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION],
     )
 
+
+
     // Sensors Screen
     @Composable
-    fun SensorsView(location: String, navController: NavController) {
-        val scope = rememberCoroutineScope()
-        val context = LocalContext.current
-        val locationClient = remember {
-            LocationServices.getFusedLocationProviderClient(context)
-        }
+    fun SensorActivityInit(location: String) {
         var locationInfo by remember {
             mutableStateOf("")
         }
@@ -210,23 +170,6 @@ class MainActivity : ComponentActivity() {
 
         var direction by remember { mutableStateOf(-1)}
 
-        // on fling
-        var fling = Modifier
-            .pointerInput(Unit) {
-                detectDragGestures(
-                    onDrag = { change, _ ->
-                        change.consume()
-                        direction = 1
-                    },
-                    onDragEnd = {
-                        if (direction != -1) {
-                            direction = -1
-                            navigateToGestures()
-                        }
-                    }
-
-                )
-            }
 
         Log.d("Temperature Viewing", temperature)
         Log.d("Humid Viewing", humidity)
@@ -260,7 +203,21 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier.align(Alignment.Start)
             )
             Button(
-                modifier = fling,
+                modifier = Modifier
+                    .pointerInput(Unit) {
+                        detectDragGestures(
+                            onDrag = { change, _ ->
+                                change.consume()
+                                direction = 1
+                            },
+                            onDragEnd = {
+                                if (direction != -1) {
+                                    direction = -1
+                                    navigateToGestures()
+                                }
+                            }
+                        )
+                    },
                 onClick = { },
             ) {
                 Text(text = "Gestures Playground")
@@ -268,22 +225,8 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-
-    // navigate to gestures
-    fun navigateToGestures()
-    {
-        //navController.navigate("GesturesView")
-        val nav = Intent(this@MainActivity, GestureActivity::class.java)
-        startActivity(nav)
-    }
-
-
-    /**
-     * Main composable, contains navgraph, and permission checking for getCoords()
-     * Called in onCreate().
-     */
     @Composable
-    fun begin_app() {
+    fun start() {
         val navController = rememberNavController()
 
         NavHost(navController = navController, startDestination = "SensorsView") {
@@ -295,11 +238,25 @@ class MainActivity : ComponentActivity() {
             ) {
                 Log.d("Current location","Permission Not Granted")
             } else {
-                // Shows info with SensorsView, gets info with getCoords
-                composable("SensorsView") { SensorsView(getCoords(),navController = navController) }
+                // Shows info with SensorsView, gets info with latlong
+                composable("SensorsView") { SensorActivityInit(latlong()) }
             }
         }
     }
+
+    // navigate to gestures
+    fun navigateToGestures()
+    {
+        val nav = Intent(this@MainActivity, GestureActivity::class.java)
+        startActivity(nav)
+    }
+
+
+    /**
+     * Main composable, contains navgraph, and permission checking for latlong()
+     * Called in onCreate().
+     */
+
 
     // For showing previews
     @Preview(showBackground = true)
