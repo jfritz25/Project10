@@ -36,7 +36,8 @@ Bonus 10%:
 
 ## Video Walkthrough
 
-Watch a demonstration of the app's functionality in the GIF available on [GitHub](https://github.com/jfritz25/Project10/blob/master/app/src/main/java/com/example/project10/Project10FullRecording.gif).
+Watch a demonstration of the app's functionality in the GIF 
+[here](https://github.com/jfritz25/Project10/blob/master/app/src/main/java/com/example/project10/Project10FullRecording.gif) .
 *GIF created with [CloudConvert](https://cloudconvert.com/).*
 
 **UI Challenges:**
