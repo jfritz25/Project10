@@ -33,7 +33,6 @@ Bonus 10%:
 [All gestures populated the screen]
 
 ---
-
 ## Video Walkthrough
 
 Watch a demonstration of the app's functionality in the GIF 
