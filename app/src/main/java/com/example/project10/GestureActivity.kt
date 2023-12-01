@@ -54,6 +54,7 @@ class GestureActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            // setting the themes
             Project10Theme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
