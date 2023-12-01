@@ -111,7 +111,7 @@ fun GestureCanvas(modifier: Modifier = Modifier.fillMaxSize()) {
         .fillMaxWidth()
         .height(Dp(300F))
         .clipToBounds()
-        .background(Color.White)
+        .background(Color.Green)
         .border(color = Color.Black, width = Dp(2F))
         .pointerInput(Unit) {
             detectTapGestures(
@@ -209,7 +209,7 @@ fun MessageRow(gestureType: GestureType)
 @Composable
 fun Greeting2(modifier: Modifier = Modifier) {
     Text(
-        text = "Welcome to the beauty that this app is",
+        text = "Welcome to the this epic app",
         modifier = modifier
     )
 }

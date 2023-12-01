@@ -6,7 +6,7 @@
 
 **Description**
 
-In Project 10, we developed an Android app using Jetpack Compose that showcases the functionality of gesture and sensors. 
+In Project 10, we developed an Android app using Jetpack Compose that showcases the functionality of gesture and sensors.
 The app consists of two activities: Sensor Activity and Gesture Activity.
 
 In Sensor Activity:
@@ -25,27 +25,27 @@ Bonus 10%:
 - Created a third activity replicating Gesture Activity, using a sensor (e.g., accelerometer) to move the ball within the fragment.
 
 **Functionality**
-
-- Demonstrated successful searches for movies, populating all relevant data.
-- Enabled sharing of movie information and visiting the IMDB page through links.
-- Implemented feedback submission functionality.
-- Handled invalid movie titles gracefully, providing appropriate feedback.
+[Opened the app]
+[Swipped Down]
+[Swipped Left]
+[Swipped Right]
+[Swipped Up]
+[All gestures populated the screen]
 
 ---
 
 ## Video Walkthrough
-Watch a demonstration of the app's functionality in the GIF available on [GitHub](https://github.com/jfritz25/Project8ThisIsTheOne/blob/master/app/src/main/java/com/example/project8/convert.gif).
 
+Watch a demonstration of the app's functionality in the GIF available on [GitHub](https://github.com/jfritz25/Project8ThisIsTheOne/blob/master/app/src/main/java/com/example/project8/convert.gif).
 *GIF created with [CloudConvert](https://cloudconvert.com/).*
 
 **UI Challenges:**
-- Connecting clickable links with data from the JSON file.
-- Simple UI design minimized potential errors.
+- Handling the live data
+- Adjusting to Jetpack Compose
 
 **Backend Challenges:**
-- API call integration.
-- Resolved issues with data binding when attempting to use the recycler view.
-- Learned to work with formatting through indexing.
+- Learned how to work with the position and location functions.
+- A lot of new content (gestures, lat, long, etc...) that was difficult to integrate using the source links at first but made sense after whiteboarding and lecture.
 
 ---
 
