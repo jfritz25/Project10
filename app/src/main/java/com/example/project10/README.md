@@ -37,7 +37,7 @@ Bonus 10%:
 
 Watch a demonstration of the app's functionality in the GIF 
 
-![Recording in GIF of Walk Through]((https://github.com/jfritz25/Project10/blob/master/app/src/main/java/com/example/project10/Project10FullRecording.gif).
+![Recording in GIF of Walk Through](https://github.com/jfritz25/Project10/blob/master/app/src/main/java/com/example/project10/Project10FullRecording.gif).
 *GIF created with [CloudConvert](https://cloudconvert.com/).*
 
 **UI Challenges:**
