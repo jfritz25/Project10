@@ -63,6 +63,9 @@ import java.util.Locale
 class MainActivity : ComponentActivity() {
     private lateinit var sensorsViewModel: SensorsViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
+        /**
+         * Initializes the main activity and sets up necessary components.
+         */
         super.onCreate(savedInstanceState)
         sensorsViewModel = ViewModelProvider(this)[SensorsViewModel::class.java]
         sensorsViewModel.initializeSensors(TemperatureSensor(applicationContext),HumiditySensor(applicationContext))
@@ -98,6 +101,14 @@ class MainActivity : ComponentActivity() {
 
     // Function gets the location based on lat long
     private fun getLocation(context: Context, lat: Double, long: Double): String {
+        /**
+         * Retrieves the location based on latitude and longitude.
+         *
+         * @param context The context in which the location is retrieved.
+         * @param lat The latitude coordinate.
+         * @param long The longitude coordinate.
+         * @return A string representing the location information.
+         */
         val state: String?
         val city: String?
         val geoCoder = Geocoder(context, Locale.getDefault())
@@ -114,9 +125,12 @@ class MainActivity : ComponentActivity() {
         anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION],
     )
 
-    // gets lat long
     @Composable
     private fun latlong(): String {
+        /**
+         * Composable function that retrieves the latitude and longitude for the current position.
+         * @return A string representing the location information.
+         */
         val scope = rememberCoroutineScope()
         val context = LocalContext.current
         val locationClient = remember {
@@ -150,10 +164,13 @@ class MainActivity : ComponentActivity() {
 
 
 
-    // Sensors Screen
     @Composable
     fun SensorActivityInit(location: String) {
-        var locationInfo by remember {
+        /**
+         * Composable function representing the main UI of the sensors activity.
+         *
+         * @param location A string representing the location information.
+         */        var locationInfo by remember {
             mutableStateOf("")
         }
         var temperature by remember {

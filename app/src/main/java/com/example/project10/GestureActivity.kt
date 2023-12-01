@@ -34,6 +34,10 @@ import com.example.project10.ui.theme.Project10Theme
 class GestureActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        /**
+         * This functions main purpose is to establish the themes for the program
+         * @param Bundle of the state to set
+         **/
         super.onCreate(savedInstanceState)
         setContent {
             // setting the themes
@@ -93,6 +97,12 @@ fun GestureTypeAssignment(gestureType: GestureType) : String
 @Preview(showBackground = true)
 @Composable
 fun GestureCanvas(modifier: Modifier = Modifier.fillMaxSize()) {
+    /**
+     * This function is apart of the jetpack compose class and is used to set the view instead of
+     * xml files!
+     * @param modifer used for gathering the values from modifer (width, color, and shape) and
+     * utilize them accordingly
+     */
     var ballLocation = remember { mutableStateOf(Offset(150F, 150F))}
     var direction by remember { mutableStateOf(-1)}
     var gesturesHistory: List<GestureType> by remember { mutableStateOf(listOf()) }
@@ -179,6 +189,10 @@ fun GestureCanvas(modifier: Modifier = Modifier.fillMaxSize()) {
 @Composable
 fun MessageRow(gestureType: GestureType)
 {
+    /**
+     * according to the gesture type the height will be adjusted and the background is set to
+     * white, the boarder is black with a Dp of 2F and the text for which gesture it was is displayed.
+     */
     val rowHeight = 50F
     var mod = Modifier
         .fillMaxWidth()
