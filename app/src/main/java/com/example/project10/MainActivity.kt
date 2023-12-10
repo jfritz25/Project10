@@ -240,6 +240,7 @@ class MainActivity : ComponentActivity() {
                 Text(text = "Gestures Playground")
             }
         }
+
     }
 
     @Composable
